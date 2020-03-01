@@ -1,0 +1,6 @@
+AP_SSID="bol-ledstrip"
+# WIFI_SSID=
+# WIFI_PASSWORD=
+LEDSTRIP_PIN=2
+MQTT_HOST="34.74.73.45"
+MQTT_TOPIC="bol/ledstrip"
