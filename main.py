@@ -46,4 +46,5 @@ if not mqtt_client.connect():
     mqtt_client.subscribe(settings.MQTT_TOPIC)
 
 while True:
+    wifimgr.get_connection()
     mqtt_client.wait_msg()
