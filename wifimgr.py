@@ -19,17 +19,16 @@ def get_connection():
     """return a working WLAN(STA_IF) instance or None"""
 
     # First check if there already is any connection:
-    if wlan_sta.isconnected():
-        print('\nConnected. Network config: ', wlan_sta.ifconfig())
-        return wlan_sta
+    attempt = 1
+    max_attempts = 5
+    while not wlan_sta.isconnected() and attempt <= max_attempts:
+        time.sleep(5)
+        attempt=attempt+1
+    
+    return wlan_sta
 
     connected = False
     try:
-        # ESP connecting to WiFi takes time, wait a bit and try again:
-        time.sleep(3)
-        if wlan_sta.isconnected():
-            return wlan_sta
-
         # Read known network profiles from file
         profiles = read_profiles()
 

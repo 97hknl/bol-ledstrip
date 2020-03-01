@@ -12,6 +12,8 @@ strip_length = 60
 brightness = 0.1
 strip = LedStrip(machine.Pin(settings.LEDSTRIP_PIN), strip_length)
 
+strip.blink(2, colors['YELLOW'])
+
 wlan = wifimgr.get_connection()
 if wlan.isconnected():
     strip.blink(2, colors['BLUE'])
