@@ -1,4 +1,5 @@
 import machine
+import sys
 import settings
 # import connect
 import wifimgr
@@ -22,21 +23,29 @@ else:
 
 
 def on_message(topic, msg):
-    msg = msg.decode().lower()
-    print('received cmd: {}'.format(msg))
-    cmds = msg.split('/')
-    print(cmds)
+    try:
+        msg = msg.decode().lower()
+        print('received cmd: {}'.format(msg))
+        cmds = msg.split('/')
+        print(cmds)
 
-    if cmds[0]=='clear':
-        strip.all(colors['BLACK'])
-    elif cmds[0]=='all':
-        strip.all(colors[cmds[1].upper()])
-    elif cmds[0]=='set':
-        strip.set_color(int(cmds[1]), colors[cmds[2].upper()])
-    elif cmds[0]=='blink':
-        strip.blink(int(cmds[1]), colors[cmds[2].upper()])
+        if cmds[0]=='clear':
+            strip.all(colors['BLACK'])
+        elif cmds[0]=='all':
+            strip.all(colors[cmds[1].upper()])
+        elif cmds[0]=='set':
+            strip.set_color(int(cmds[1]), colors[cmds[2].upper()])
+        elif cmds[0]=='blink':
+            strip.blink(int(cmds[1]), colors[cmds[2].upper()])
+        else:
+            strip.blink(2, colors['RED'])
+            print('Unknown command: {}'.format("/".join(cmds)))
+        
+        strip.update()
     
-    strip.update()
+    except Exception as e:
+        sys.print_exception(e)
+        strip.blink(2, colors['RED'])
         
 
 mqtt_client = MQTTClient("client", settings.MQTT_HOST)
