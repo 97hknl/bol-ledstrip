@@ -24,8 +24,9 @@ def get_connection():
     while not wlan_sta.isconnected() and attempt <= max_attempts:
         time.sleep(5)
         attempt=attempt+1
-    
-    return wlan_sta
+
+    if wlan_sta.isconnected():
+        return wlan_sta
 
     connected = False
     try:
@@ -38,7 +39,7 @@ def get_connection():
 
         AUTHMODE = {0: "open", 1: "WEP", 2: "WPA-PSK", 3: "WPA2-PSK", 4: "WPA/WPA2-PSK"}
         for ssid, bssid, channel, rssi, authmode, hidden in sorted(networks, key=lambda x: x[3], reverse=True):
-            ssid = ssid.decode('utf-8')
+            ssid = ssid.decode('ascii')
             encrypted = authmode > 0
             print("ssid: %s chan: %d rssi: %d authmode: %s" % (ssid, channel, rssi, AUTHMODE.get(authmode, '?')))
             if encrypted:
@@ -87,11 +88,11 @@ def do_connect(ssid, password):
     print('Trying to connect to %s...' % ssid)
     wlan_sta.connect(ssid, password)
     for retry in range(100):
+        print("trying to connect, try={}".format(retry))
         connected = wlan_sta.isconnected()
         if connected:
             break
-        time.sleep(0.1)
-        print('.', end='')
+        time.sleep(1)
     if connected:
         print('\nConnected. Network config: ', wlan_sta.ifconfig())
     else:
