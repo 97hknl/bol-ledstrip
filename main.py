@@ -2,6 +2,7 @@ import machine
 import sys
 import settings
 import time
+import ubinascii
 # import connect
 import wifimgr
 
@@ -59,7 +60,7 @@ def connect():
             time.sleep(1)
 
 
-mqtt_client = MQTTClient("client", settings.MQTT_HOST)
+mqtt_client = MQTTClient(ubinascii.hexlify(machine.unique_id()), settings.MQTT_HOST)
 mqtt_client.DEBUG=True
 mqtt_client.set_callback(on_message)
 
