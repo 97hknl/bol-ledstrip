@@ -1,12 +1,13 @@
 import machine
 import sys
 import settings
+import time
 # import connect
 import wifimgr
 
 from color import colors
 from ledstrip import LedStrip
-from umqtt.robust import MQTTClient
+from umqtt.simple import MQTTClient
 
 
 strip_length = 60
@@ -46,14 +47,30 @@ def on_message(topic, msg):
     except Exception as e:
         sys.print_exception(e)
         strip.blink(2, colors['RED'])
-        
+
+def connect():
+    while True:
+        try:
+            mqtt_client.connect(clean_session=True)
+            mqtt_client.subscribe(settings.MQTT_TOPIC)
+            break
+        except Exception as e:
+            sys.print_exception(e)
+            time.sleep(1)
+
 
 mqtt_client = MQTTClient("client", settings.MQTT_HOST)
+mqtt_client.DEBUG=True
 mqtt_client.set_callback(on_message)
 
-if not mqtt_client.connect():
-    mqtt_client.subscribe(settings.MQTT_TOPIC)
+connect()
 
 while True:
-    wifimgr.get_connection()
-    mqtt_client.wait_msg()
+    try:
+        mqtt_client.wait_msg()
+    except Exception as e:
+        sys.print_exception(e)
+        connect()
+
+
+mqtt_client.disconnect()
