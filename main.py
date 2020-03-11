@@ -33,6 +33,8 @@ def on_message(topic, msg):
 
         if cmds[0]=='clear':
             strip.all(colors['BLACK'])
+        elif cmds[0]=='add':
+            strip.add(colors[cmds[1].upper()])
         elif cmds[0]=='all':
             strip.all(colors[cmds[1].upper()])
         elif cmds[0]=='set':
